@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.jneat.mybatis.JsonMapper">
+    
+    <resultMap id="jentity" type="com.github.jneat.mybatis.JsonEntity" autoMapping="true">
+        <id property="id" column="id" javaType="long"/>
+        <result property="jsonArray" column="jsonarray" javaType="com.fasterxml.jackson.core.TreeNode" />
+        <result property="jsonObject" column="jsonobject" javaType="com.fasterxml.jackson.core.TreeNode" />
+    </resultMap>
+    
+    <select id="get" resultMap="jentity">
+        SELECT * FROM mybatis_jackson WHERE id = #{id};
+    </select>
+    
+    <insert id="insert">
+        INSERT INTO mybatis_jackson
+        (id, jsonArray, jsonObject, nodeArray, nodeObject)
+        VALUES (
+        #{id}, 
+        <if test="jsonArray == null">null,</if>
+        <if test="jsonArray != null">(#{jsonArray})::json,</if>
+        <if test="jsonObject == null">null,</if>
+        <if test="jsonObject != null">(#{jsonObject})::json,</if>
+        <if test="nodeArray == null">null,</if>
+        <if test="nodeArray != null">(#{nodeArray.value})::json,</if>
+        <if test="nodeObject == null">null</if>
+        <if test="nodeObject != null">(#{nodeObject.value})::json</if>
+        )
+    </insert>
+    
+    <insert id="insertValues">
+        INSERT INTO mybatis_jackson
+        (id, jsonArray, jsonObject, nodeArray, nodeObject)
+        VALUES (
+        #{id}, 
+        <if test="jsonArray == null">null,</if>
+        <if test="jsonArray != null">(#{jsonArray})::json,</if>
+        <if test="jsonObject == null">null,</if>
+        <if test="jsonObject != null">(#{jsonObject})::json,</if>
+        <if test="nodeArray == null">null,</if>
+        <if test="nodeArray != null">(#{nodeArray})::json,</if>
+        <if test="nodeObject == null">null</if>
+        <if test="nodeObject != null">(#{nodeObject})::json</if>
+        )
+    </insert>
+    
+</mapper>
